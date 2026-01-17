@@ -57,3 +57,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
+
+Route::get('/fix-category-error', function () {
+    try {
+        // Perintah SQL untuk mengubah paksa kolom category menjadi Text Bebas
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE products MODIFY COLUMN category VARCHAR(255)");
+        return "<h1>SUKSES! 🎉</h1> <p>Database berhasil diperbaiki. Kolom category sekarang bisa menerima teks apa saja (termasuk 'brightening'). Silakan coba input produk lagi.</p>";
+    } catch (\Exception $e) {
+        return "<h1>GAGAL :(</h1> <p>Error: " . $e->getMessage() . "</p>";
+    }
+});
